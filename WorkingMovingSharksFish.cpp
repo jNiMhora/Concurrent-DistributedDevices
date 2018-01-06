@@ -364,28 +364,28 @@ vector<int> checkSharkBesideFish(char grid[20][50], vector<Shark>& sTracker, int
 		{
 			//shark is at grid[sharkRow][sharkCol]
 			//found where shark is in the grid
-			if (grid[sharkRow - 1][sharkCol] == 'f')
+			if (grid[sharkRow - 1][sharkCol] == 'F')
 			{
 				//found a fish above, nom nom!
 				rowLoc = sharkRow - 1;
 				colLoc = sharkCol;
 				fishFound = 1;
 			}
-			else if (grid[sharkRow + 1][sharkCol] == 'f')
+			else if (grid[sharkRow + 1][sharkCol] == 'F')
 			{
 				//found a fish, nom nom!
 				rowLoc = sharkRow + 1;
 				colLoc = sharkCol;
 				fishFound = 1;
 			}
-			else if (grid[sharkRow][sharkCol - 1] == 'f')
+			else if (grid[sharkRow][sharkCol - 1] == 'F')
 			{
 				//found a fish, nom nom!
 				rowLoc = sharkRow;
 				colLoc = sharkCol - 1;
 				fishFound = 1;
 			}
-			else if (grid[sharkRow][sharkCol + 1] == 'f')
+			else if (grid[sharkRow][sharkCol + 1] == 'F')
 			{
 				//found a fish, nom nom!
 				rowLoc = sharkRow;
@@ -402,19 +402,16 @@ vector<int> checkSharkBesideFish(char grid[20][50], vector<Shark>& sTracker, int
 			}
 		}
 		fishFound = 0;
-		//SEND BACK DOWN THE SHARK LOCATION AS WELL
-		//put shark in first 
+		
+		fishLocation.push_back(sharkRow);
+		fishLocation.push_back(sharkCol);
 
 		fishLocation.push_back(rowLoc);
-		fishLocation.push_back(colLoc);//pushing the two values for row and column into a vector so that can be returned to locate fish
+		fishLocation.push_back(colLoc);//pushing the two values for row and column into a vector so that can be returned to locate fish and correspoding shark
+	
 
 	}
-	//the first location we find to be occupied by a fish
-	//we set the value to be 1 and send back the location eg: [0][1]
-	//for the shark to  eat and kill fish 
-	//fishLocation.push_back(rowLoc);
-	//fishLocation.push_back(colLoc);//pushing the two values for row and column into a vector so that can be returned to locate fish
-
+	
 	return fishLocation;
 }//end function 
 
@@ -424,9 +421,9 @@ int main()
 	char grid[20][50];//Wa-Tor World 
 	srand(time(NULL));
 	int i = 0;
-	int Timer = 500;
+	int Timer = 10;
 	int NumShark = 5; //start number of sharks 
-	int NumFish = 10; //start number of fish 
+	int NumFish = 20; //start number of fish 
 	int SharkBreed = 25; //Number of iterations before shark can breed 
 	int FishBreed = 10; //Number of iterations before fish can breed 
 	int starve = 4; //Number of iterations before shark starves and is deleted from vector 
@@ -443,8 +440,9 @@ int main()
 	int fishCount = 0;
 	int sharkCount = 0;
 	//new variables
-	int sharkStarveTime = 4;
-	int sharkLastEatTime = 0;
+	int sharkStarveTime = 0;
+	int sharkLastEatTime = 4;
+	int lastEat = 0;
 	bool sharkBesideFish = false;
 	//shark breed variables
 	int sharkBreedTime = 6; //constant
@@ -453,11 +451,15 @@ int main()
 	int fishBreedTime = 2; //constant
 	int fishTime = 0; //counter of time
 	//shark tracker variables
-	int sTrackRow = 1;
-	int sTrackCol = 1;
+	int sTrackRow = 0;
+	int sTrackCol = 0;
+	int trackCol = 0;
+	int trackRow = 0;
 	//fish tracker variables
 	int fishRow = 0;
 	int fishCol = 0;
+	int fTrackRow = 0;
+	int fTrackCol = 0;
 
 	//Intialize grid to be empty 
 	for (row = 0; row < 20; row++)
@@ -478,7 +480,7 @@ int main()
 			if (space = '_')
 			{
 				grid[row][col] = 'S';
-				Shark s(starve, SharkBreed, row, col); //Create shark object 
+				Shark s(starve, SharkBreed, sharkLastEatTime, row, col); //Create shark object 
 				sharkTracker.push_back(s); //add to tracker 
 				slot = 'E';
 			}
@@ -505,105 +507,177 @@ int main()
 	}
 
 	//Life Cycle 
-	for (i = 0; i < 10; i++)
+	for (int j = 0; j < Timer; j++)//changed to j as i was being used elsewhere
 	{
 		
 		//system("CLS");
 		char(*ptGrids)[50] = Move(sharkTracker, fishTracker, shark, grid, 20);
 		char(*ptGridf)[50] = Move(sharkTracker, fishTracker, fish, grid, 20);
 		vector<int> sharkBesideFishResult = checkSharkBesideFish(grid, sharkTracker, 2);
-
+		//this is for checking
 		/*for (vector<int>::iterator it=sharkBesideFishResult.begin(); it != sharkBesideFishResult.end(); ++it)
 		{
-			cout << ' ' << *it;
+			cout << ' ' << *it << endl;
 		}
 		*/
 		//check sharkBesideFishResult to see if the shark can eat and RESET BOOL SHARKBESIDEFISH TO TRUE
 
-			//this is to find the fish location so we can remove it from the grid in the 'else if' statement
+		
 		while (!sharkBesideFishResult.empty())//while theres still a value in the vector
 		{
+			//pop off next fish
 			fishCol = sharkBesideFishResult.back();
 			sharkBesideFishResult.pop_back();
 			fishRow = sharkBesideFishResult.back();
 			sharkBesideFishResult.pop_back();
-			//push back for fish location to use when eat() is called 
+			cout << "fish at: " << fishRow << "/" << fishCol << endl;
+
+			//pop off corresponding shark col and row
+			sTrackCol = sharkBesideFishResult.back();
+			sharkBesideFishResult.pop_back();
+			sTrackRow = sharkBesideFishResult.back();
+			sharkBesideFishResult.pop_back();
+			cout << "shark at: " << sTrackRow << "/" << sTrackCol << endl;
 			
-			cout << "fishRow[" << fishRow << "]";
-			cout << "fishCol[" << fishCol << "]";
-			
-			//if the location is not "empty"
-			if (fishCol != 100 && fishRow != 100)
+			//if the location is not "empty", if there is a fish beside a shark
+			if (fishRow != 100 && fishCol != 100)
 			{
 				sharkBesideFish = true;
-				//pop off corresponding shark col and row
-			}
-			//find the corresponding shark in the vector at this location
-			if (sharkLastEatTime == 0 && sharkBesideFish == false)
-			{
-				//remove shark from the vector and grid
-				//remove this shark using the current location points
-				cout << "shark dies" << endl;
-				sharkLastEatTime = 0;
-			}
-			else if (sharkBesideFish == true)
-			{
-				//eat();
-				//remove fish from the vector and grid using the current fishCol and fishRow 
-				//change the shark at the current sharkRow and sharkCol 's last eat time
-				sharkLastEatTime = 0;
-				cout << "shark lives for another turn" << endl;
 			}
 			else
 			{
-				//use the current sharkRow and sharkCol to change this sharks lastEatTime
-				sharkLastEatTime++;
-				cout << "shark closer to starving" << endl;
+				sharkBesideFish == false;
+			}
+			
+			if(sharkBesideFish == false)//there was no fish
+			{
+				int sharkSize = sharkTracker.size();
+				int fishSize = fishTracker.size();
+
+				//find current shark in vector and decrease its sharkLastEatTime by one
+				for (i = 0; i < sharkTracker.size(); i++)
+				{
+					 trackRow = sharkTracker[i].getRow();
+					 trackCol = sharkTracker[i].getCol();
+					 lastEat = sharkTracker[i].getLastEatTime();
+					 //if the current shark has run out of time to eat
+					 if (lastEat == 0 && trackRow == sTrackRow && trackCol == sTrackCol)
+					 {
+						 //remove shark from the vector and grid
+						 sharkTracker.erase(sharkTracker.begin() + i);
+						 NumShark--;
+
+						 //remove this shark using the current location points
+						 cout << "shark dies" << endl;
+					 } 
+					 //current shark is still hungry
+					 else if (trackRow == sTrackRow && trackCol == sTrackCol)
+					 {
+						 //cout << lastEat << endl;
+						 sharkLastEatTime = lastEat - 1;
+						 sharkTracker[i].setLastEatTime(sharkLastEatTime);
+						// int check = sharkTracker[i].getLastEatTime();
+						// cout << check << endl;
+						cout << "shark closer to starving" << endl;
+						
+					 }
+					
+					 
+				}
+			}
+			else if (sharkBesideFish == true)
+			{
+				//remove fish from the vector using the current fishCol and fishRow 
+				for (i = 0; i < fishTracker.size(); i++)
+				{
+					fTrackRow = fishTracker[i].getRow();
+					fTrackCol = fishTracker[i].getCol();
+
+					//find the current fish to take it out
+					if (fishRow == fTrackRow && fishCol == fTrackCol)
+					{
+						//remove fish from the vector and grid
+						fishTracker.erase(fishTracker.begin() + i);
+						NumFish--;
+						//cout << "fish eaten" << endl;
+						//cout << "numFish" << NumFish << endl;
+					}
+				}
+				//reset the current shark's last eat time
+				for (i = 0; i < sharkTracker.size(); i++)
+				{
+					trackRow = sharkTracker[i].getRow();
+					trackCol = sharkTracker[i].getCol();
+					//lastEat = sharkTracker[i].getLastEatTime();
+					//cout << lastEat << endl;
+
+					//find current shark in the vector of sharks to update its value
+					if (trackRow == sTrackRow && trackCol == sTrackCol)
+					{
+						sharkLastEatTime = 4;
+						sharkTracker[i].setLastEatTime(sharkLastEatTime);
+						//int doubleCheck = sharkTracker[i].getLastEatTime();
+						//cout << "update last eat time" << doubleCheck << endl;
+
+						cout << "shark lives for another turn" << endl;
+						
+					}
+
+				}
+				sharkBesideFish = false;//resets so the sharks dont become invincible 
 			}
 		}
 		
-		/*
-		if (sharkTime == sharkBreedTime)
-		{
-		//increase number of sharks
-		//add shark vector to the array
-		//call displayGrid() function to get the shark added
-		cout << "new baby shark" << endl;
-		sharkTime = 0;//reset the shark breed counter
-		}
-
-		if (fishTime == fishBreedTime)
-		{
-		//increase number of fish
-		//add fish vector to the array
-		//call displayGrid() function to get the fish added
-		cout << "new baby fish" << endl;
-		fishTime = 0;//reset the fish breed counter
-		}*/
+		///BREED METHODS
 		//every iteration, shark will grow older to breed
 		sharkTime++;
 		//every iteration, fish will get older
 		fishTime++;
-		
+		if (sharkTime == SharkBreed)
+		{
+			while (slot != 'E')//find position in grid for new shark object
+			{
+				row = rand() % 19;
+				col = rand() % 49;
+				space = grid[row][col];
+				if (space = '_')
+				{
+					grid[row][col] = 'S';
+					Shark s(starve, SharkBreed, sharkLastEatTime, row, col); //Create shark object 
+					sharkTracker.push_back(s); //add to tracker 
+					NumShark++;
+					sharkTime = 0;
+					slot = 'E';
+				}
+			}
+			slot = ' ';
+		}
+		if (fishTime == FishBreed)
+		{
+			while (slot != 'E')//find position in grid for new fish object
+			{
+				row = rand() % 19;
+				col = rand() % 49;
+				space = grid[row][col];
+				if (space = '_')
+				{
+					grid[row][col] = 'F';
+					Fish f(FishBreed, row, col); //Create shark object 
+					fishTracker.push_back(f); //add to tracker 
+					NumFish++;
+					fishTime = 0;
+					slot = 'E';
+				}
+			}
+			slot = ' ';
+		}
+			
 		Print(grid);
+		cout << endl;
+		cout << "Number of Fish: " << NumFish << ' ' << "Number of Sharks: " << NumShark << endl;
+
 	}
-	/*	cout << "FISH:" << endl;
-	for (i = 0; i < fishTracker.size(); i++)
-	{
-		row = fishTracker[i].getRow();
-		col = fishTracker[i].getCol();
-		cout << row << endl;
-		cout << col << endl;
-	}
-	cout << "SHARK:" << endl;
-	for (i = 0; i < sharkTracker.size(); i++)
-	{
-		row = sharkTracker[i].getRow();
-		col = sharkTracker[i].getCol();
-		cout << row << endl;
-		cout << col << endl;
-	}
-*/
+	
 	cin.get();
 	return 0;
 }
