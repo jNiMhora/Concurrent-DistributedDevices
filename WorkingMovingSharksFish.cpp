@@ -1,7 +1,7 @@
 // Wa-Tor.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Shark.h"
 #include "Fish.h"
 #include <iostream>
