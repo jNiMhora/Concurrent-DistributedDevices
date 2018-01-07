@@ -563,9 +563,11 @@ int main()
 					 //if the current shark has run out of time to eat
 					 if (lastEat == 0 && trackRow == sTrackRow && trackCol == sTrackCol)
 					 {
-						 //remove shark from the vector and grid
+						 //remove shark from the vector
 						 sharkTracker.erase(sharkTracker.begin() + i);
 						 NumShark--;
+						 //remove shark from grid
+						 grid[trackRow][trackCol] = '_';							//IS THIS ALRIGHT TO REMOVE THE SHARK FROM GRID?
 
 						 //remove this shark using the current location points
 						 cout << "shark dies" << endl;
@@ -596,9 +598,12 @@ int main()
 					//find the current fish to take it out
 					if (fishRow == fTrackRow && fishCol == fTrackCol)
 					{
-						//remove fish from the vector and grid
+						//remove fish from the vector 
 						fishTracker.erase(fishTracker.begin() + i);
 						NumFish--;
+						//remove fish from grid
+						grid[fTrackRow][fTrackCol] = '_';						//IS THIS ALRIGHT TO REMOVE THE FISH FROM GRID?
+
 						//cout << "fish eaten" << endl;
 						//cout << "numFish" << NumFish << endl;
 					}
@@ -623,7 +628,7 @@ int main()
 						
 					}
 
-				}
+				}  
 				sharkBesideFish = false;//resets so the sharks dont become invincible 
 			}
 		}
