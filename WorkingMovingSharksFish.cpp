@@ -14,6 +14,7 @@
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 using namespace std;
 //!
@@ -522,7 +523,7 @@ int main()
 		slot = ' ';
 	}
 
-	//! Life Cycle /?!
+	//! Life Cycle //!
 	  for (int j = 0; j < Timer; j++)//! changed to j as i was being used elsewhere //!
 	    {
 		
@@ -691,8 +692,9 @@ int main()
 		    }
 		  slot = ' ';
 		}
-			
+		  	
 	      Print(grid);
+	      usleep(1000500);
 	      cout << endl;
 	      cout << "Number of Fish: " << NumFish << ' ' << "Number of Sharks: " << NumShark << endl;
 
