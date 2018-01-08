@@ -442,13 +442,15 @@ int main()
         srand(time(NULL));  
 	char grid[20][50];//!Wa-Tor World //! 
 	int i = 0;
-	int Timer = 50;
-	int NumShark = 5; //! start number of sharks //!
+	int Timer = 30;
+	int NumShark = 10; //! start number of sharks //!
 	int NumFish = 20; //! start number of fish //! 
-	int sharkTime = 6; //! Number of iterations before shark can breed //! 
-	int fishTime = 2; //! Number of iterations before fish can breed //!
-	int SharkBreed = 6;
-	int FishBreed = 2;
+	int sharkTime = 0; //! Number of iterations before shark can breed //! 
+	int fishTime = 0; //! Number of iterations before fish can breed //!
+	int SharkBreed = 10;
+	int FishBreed = 5;
+	int babyFishes = 0; //!Current number of fishes divided by 2
+	int babySharks = 0;
 	int starve = 4; //! Number of iterations before shark starves and is deleted from vector //! 
 	char slot = ' '; //! Used for insertion into Grid //!
 	char space = ' ';//! Used for insertion into Grid //!
@@ -656,47 +658,55 @@ int main()
 	      fishTime++;
 	      if (sharkTime == SharkBreed)
 		{
-		  while (slot != 'E')//! find position in grid for new shark object //!
+		  babySharks = NumShark/2;
+		  for(i=0; i < babySharks; i++)
 		    {
-		      row = rand() % 19;
-		      col = rand() % 49;
-		      space = grid[row][col];
-		      if (space = '_')
+		      while (slot != 'E')//! find position in grid for new shark object //!
 			{
-			  grid[row][col] = 'S';
-			  Shark s(starve, SharkBreed, sharkLastEatTime, row, col); //! Create shark object //! 
-			  sharkTracker.push_back(s); //! add to tracker //! 
-			  NumShark++;
-			  sharkTime = 0;
-			  slot = 'E';
+			  row = rand() % 19;
+			  col = rand() % 49;
+			  space = grid[row][col];
+			  if (space = '_')
+			    {
+			      grid[row][col] = 'S';
+			      Shark s(starve, SharkBreed, sharkLastEatTime, row, col); //! Create shark object //! 
+			      sharkTracker.push_back(s); //! add to tracker //! 
+			      NumShark++;
+			      slot = 'E';
+			    }
 			}
+		      slot = ' ';
 		    }
-		  slot = ' ';
+		  sharkTime = 0;
 		}
 	      if (fishTime == FishBreed)
 		{
-		  while (slot != 'E')//! find position in grid for new fish object //!
+		  babyFishes = NumFish/2;
+		  for(i=0; i < babyFishes; i++)
 		    {
-		      row = rand() % 19;
-		      col = rand() % 49;
-		      space = grid[row][col];
-		      if (space = '_')
-			{
-			  grid[row][col] = 'F';
-			  Fish f(FishBreed, row, col); //! Create shark object //! 
-			  fishTracker.push_back(f); //! add to tracker //! 
-			  NumFish++;
-			  fishTime = 0;
-			  slot = 'E';
-			}
+		       while (slot != 'E')//! find position in grid for new fish object //!
+			 {
+			   row = rand() % 19;
+			   col = rand() % 49;
+			   space = grid[row][col];
+			   if (space = '_')
+			     {
+			       grid[row][col] = 'F';
+			       Fish f(FishBreed, row, col); //! Create shark object //! 
+			       fishTracker.push_back(f); //! add to tracker //! 
+			       NumFish++;
+			       slot = 'E';
+			     }  
+			 }
+		       slot = ' ';
 		    }
-		  slot = ' ';
+		 fishTime = 0;
 		}
 		  	
 	      Print(grid);
-	      usleep(1000500);
 	      cout << endl;
 	      cout << "Number of Fish: " << NumFish << ' ' << "Number of Sharks: " << NumShark << endl;
+	      usleep(150000);
 
 	    }
 	
