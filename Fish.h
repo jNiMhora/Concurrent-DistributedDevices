@@ -32,7 +32,7 @@ public:
 	}
 
 	//Getter Methods 
-	int getBreedTime()
+	int getBreedTimer()  
 	{
 		return breedTimer;
 	}

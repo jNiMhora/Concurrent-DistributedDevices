@@ -37,7 +37,7 @@ public:
 	{
 		Row = row;
 	}
-	void setCol(int col)
+	void setCol(int col)  
 	{
 		Col = col;
 	}
