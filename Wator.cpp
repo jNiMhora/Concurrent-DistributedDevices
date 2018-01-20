@@ -17,9 +17,9 @@
 #include <unistd.h>
 
 using namespace std;
-//!
-//!function to move the sharks and fishes accordng to their location and the empty spaces
-//!
+/*
+/*brief function to move the sharks and fishes accordng to their location and the empty spaces
+*/
 char(*Move(vector<Shark>& sTracker, vector<Fish>& fTracker, char type, char grid[][50], size_t sz))[50]
 {//This changes objects positions in the grid & checks for collions between positions beofre moving
 int i;
@@ -342,9 +342,9 @@ if (type == 'f')
 		newPos = false;
 	}
 }
-//!
-//!function to print the grid of fish and shark
-//!
+/*
+/*brief function to print the grid of fish and shark
+*/
 return grid;
 }
 void Print(char grid[20][50])
@@ -358,9 +358,9 @@ void Print(char grid[20][50])
 		cout << endl;
 	}
 }
-//!
-//!function to check sharks and the location of fish to see if there are any beside the sharks to be eaten 
-//!
+/*
+/* brief function to check sharks and the location of fish to see if there are any beside the sharks to be eaten 
+*/
 vector<int> checkSharkBesideFish(char grid[20][50], vector<Shark>& sTracker, int locationLength)//! is the shark near a fish to eat? //!
 {
 	int fishFound = 0;
@@ -658,8 +658,9 @@ int main()
 		    }
 		}
 		
-	      //! BREED METHODS //!
-	      //! every iteration, shark will grow older to breed //!
+		//! BREED METHODS //!
+		//! every iteration, shark will grow older to breed
+		//!  
 	      SharkBreed++;
 	      for (i = 0; i < sharkTracker.size(); i++)
 		{
