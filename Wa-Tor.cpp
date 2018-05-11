@@ -39,6 +39,7 @@ srand(time(NULL));
 //! if the entity is a shark //!
 if (type == 's')
 {
+	#pragma omp parallel
 	for (i = 0; i < sTracker.size(); i++)
 	{
 		sRow = sTracker[i].getRow();
@@ -197,6 +198,7 @@ if (type == 's')
 //! ************FISH******************** //!
 if (type == 'f')
 {
+	#pragma omp parallel
 	for (i = 0; i < fTracker.size(); i++)
 	{
 		fRow = fTracker[i].getRow();
@@ -349,6 +351,7 @@ return grid;
 }
 void Print(char grid[20][50])
 {
+	#pragma omp parallel
 	for (int r = 0; r < 20; r++)
 	{
 		for (int c = 0; c < 50; c++)
@@ -372,6 +375,7 @@ vector<int> checkSharkBesideFish(char grid[20][50], vector<Shark>& sTracker, int
 	//! function to check if shark has any fish to eat //!
 
 	//! get into the shark tracker to identify individual sharks //!
+	#pragma omp parallel
 	for (int i = 0; i < sTracker.size(); i++)
 	{
 		sharkRow = sTracker[i].getRow();
@@ -491,6 +495,7 @@ int main()
 		}
 	}
 	//! insert sharks //!
+	#pragma omp parallel
 	for (i = 0; i < NumShark; i++)
 	{
 		while (slot != 'E')//! find position in grid for new shark object //!
@@ -509,6 +514,7 @@ int main()
 		slot = ' ';//! reset to get back into while loop //!
 	}
 	//! insert fish //!
+	#pragma omp parallel
 	for (i = 0; i < NumFish; i++)
 	{
 		while (slot != 'E')//! find position in grid for new fish object //!
@@ -528,6 +534,7 @@ int main()
 	}
 
 	//! Life Cycle //!
+	#pragma omp parallel
 	for (int j = 0; j < Timer; j++)//! changed to j as i was being used elsewhere //!
 	{
 
